@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:peliculas/models/models.dart';
+
+class MoviesProvider extends ChangeNotifier{
+
+  final String _apiKey = 'cd1a938bb324f711099221a6c47551fe';
+  final String _baseUrl = 'api.themoviedb.org';
+  final String _language = 'es-ES';
+
+  List<Movie> onDisplayMovies = [];
+  List<Movie> popularMovies = [];
+
+  int _popularPage = 0;
+
+  MoviesProvider() {
+    print('MoviesProvider inicializado');
+
+    getOnDisplayMovies();
+    getPopularMovies();
+  }
+
+  // la pagina es opcional y si no se incerta el valor es 1 "[int page = 1]"
+  Future<String> _getJsonData(String endpoint, [int page = 1]) async {
+         var url = Uri.https(_baseUrl, endpoint, {
+      'api_key': _apiKey,
+      'language': _language,
+      'page': '$page'
+      });
+
+  // Await the http get response, then decode the json-formatted response.
+  final response = await http.get(url);
+  return response.body;
+  }
+
+  getOnDisplayMovies() async {
+
+  final jsonData = await _getJsonData('3/movie/now_playing');
+  final nowPlayingResponse = NowPlayingResponse.fromJson(jsonData);
+  //final decodedData = json.decode(response.body) as Map<String, dynamic>;
+  //if(response.statusCode != 200) return print('error');
+  //print(decodedData['results']);
+  //print(nowPlayingResponse.results[1].title);
+  onDisplayMovies = nowPlayingResponse.results;
+
+  // cuando ocupamos redibujar widgets se usa el sig metodo que notifica a los widgets cuando hay un cambio
+  notifyListeners();
+  }
+
+  getPopularMovies() async {
+  _popularPage++;
+
+  final jsonData = await _getJsonData('3/movie/popular', _popularPage);
+  final popularResponse = PopularResponse.fromJson(jsonData);
+
+  // se concatenan las películas ya cargadas con las nuevas
+  popularMovies = [ ...popularMovies, ...popularResponse.results];
+  //print(popularMovies[1]);
+  notifyListeners();
+  }
+
+}
