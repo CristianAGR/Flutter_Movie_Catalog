@@ -44,16 +44,21 @@ return Container(
       );
   }
 
+  // el buildSuggestions se dispara cada vez que se toca una tecla
   @override
   Widget buildSuggestions(BuildContext context) {
     if (query.isEmpty) {
       _emptyContainer();
     }
 
-    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false); 
+    //print('http request');
 
-    return FutureBuilder(
-      future: moviesProvider.searchMovies(query),
+    final moviesProvider = Provider.of<MoviesProvider>(context, listen: false); 
+    moviesProvider.getSuggestionsByQuery(query);
+
+    // streamBuilder solo se redibujara cuando el suggestionStream emite un valor
+    return StreamBuilder(
+      stream: moviesProvider.suggestionStream,
       builder: (_, AsyncSnapshot<List<Movie>> snapshot){
 
         if ( !snapshot.hasData ) return _emptyContainer();
