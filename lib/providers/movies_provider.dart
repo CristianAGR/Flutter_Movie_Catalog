@@ -17,7 +17,7 @@ class MoviesProvider extends ChangeNotifier{
   int _popularPage = 0;
 
   MoviesProvider() {
-    print('MoviesProvider inicializado');
+    // MoviesProvider inicializado
 
     getOnDisplayMovies();
     getPopularMovies();
