@@ -17,7 +17,7 @@ class MovieSearchDelegate extends SearchDelegate{
     return [
      IconButton(
       onPressed: () =>  query = '', 
-      icon: Icon( Icons.clear))
+      icon: const Icon( Icons.clear))
     ];
   }
 
@@ -27,7 +27,7 @@ class MovieSearchDelegate extends SearchDelegate{
       onPressed: () {
         close(context, null);
       }, 
-      icon: Icon( Icons.arrow_back));
+      icon: const Icon( Icons.arrow_back));
   }
 
   @override
@@ -39,7 +39,7 @@ class MovieSearchDelegate extends SearchDelegate{
   Widget _emptyContainer() {
 return Container(
         child: const Center(
-          child: Icon( Icons.movie_creation_outlined, color: Colors.black38, size: 100,),
+          child: Icon( Icons.movie_creation_outlined, color: Colors.black38, size: 130,),
         ),
       );
   }
@@ -75,21 +75,23 @@ class _MovieItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 50,
-      child: ListTile(
-        leading: FadeInImage(
-          placeholder: AssetImage('assets/no-image.jpg'),
-          image: NetworkImage(movie.fullPosterImg),
-          width: 50,
-          fit: BoxFit.contain,
+    movie.heroId = 'search-${ movie.id }';
+
+    return ListTile(
+        leading: Hero(
+          tag: movie.heroId!,
+          child: FadeInImage(
+            placeholder: AssetImage('assets/no-image.jpg'),
+            image: NetworkImage(movie.fullPosterImg),
+            width: 50,
+            fit: BoxFit.contain,
+          ),
         ),
         title: Text(movie.title),
         subtitle: Text(movie.originalTitle),
         onTap: () {
           Navigator.pushNamed(context, 'details', arguments: movie);
         },
-      ),
     );
   }
 
