@@ -33,6 +33,8 @@ class Movie {
     double voteAverage;
     int voteCount;
 
+    // propiedad para idUnico en Hero widget
+    String? heroId;
 
     // getter para obtener el poster
     get fullPosterImg {
